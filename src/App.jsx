@@ -1,11 +1,10 @@
 import './App.css'
-import MusicPlayer from './MusicPlayer'
-
+import Player from './Player'
 function App() {
 
   return (
     <>
-    <MusicPlayer />
+    <Player />
     </>
   )
 }

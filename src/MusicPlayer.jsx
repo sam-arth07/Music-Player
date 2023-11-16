@@ -1,4 +1,3 @@
-
 import {tracks} from './assets/tracks'
 
 export default function MusicPlayer() {
