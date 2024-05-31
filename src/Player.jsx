@@ -16,7 +16,8 @@ import Typography from '@mui/material/Typography';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import { useTheme } from '@mui/material/styles';
-
+import {useMediaQuery} from '@mui/material';
+import ChangeSpeed from './ChangeSpeed';
 //initial audio
 let audio = new Audio(tracks[0].src)
 let title = tracks[0].title
@@ -30,6 +31,7 @@ function getCurrentTime () {
 }
  
 export default function Player() {
+    const isMobile = useMediaQuery('(max-width:600px)')
     const theme = useTheme();
     const [isClicked,setIsClicked] = useState(false) //to provide functionality to play and pause logic
     const [trackId,setTrackId] = useState(0) //to track which song is playing at any moment
@@ -100,17 +102,34 @@ export default function Player() {
     const fastForward = ()=> {
             audio.playbackRate = 2
     }
+    const setSpeed = (speed) =>{
+        if(speed==='1x'){
+            audio.playbackRate=1;
+        }
+        else if(speed==='1.25x'){
+            audio.playbackRate=1.25;
+        }
+        else if(speed==='1.5x'){
+            audio.playbackRate=1.5;
+        }
+        else if(speed==='1.75x'){
+            audio.playbackRate=1.75;
+        }
+        else if(speed==='2x'){
+            audio.playbackRate=2;
+        }
+    }
     if (getCurrentTime()===getDuration()){
         handleNext(trackId)
     }
     return(
         
-        <>
+        <Box>
         <Typography component="div" variant="overline" fontSize={26} gutterBottom>
             Current Track:
         </Typography>
-        <Card sx={{ display: 'flex'}}>
-        <Box sx={{ display: 'flex', flexDirection: 'column' ,width:172}}>
+        <Card sx={{ display: 'flex',flexDirection:isMobile?'column':'row'}}>
+        <Box sx={{ display: 'flex', flexDirection: "column",width:isMobile?"auto":171}}>
 
             <CardContent sx={{ flex: '1 0 auto'}}>
                 <Typography component="div" variant="h5">
@@ -122,7 +141,7 @@ export default function Player() {
                 
             </CardContent>
 
-            <Box sx={{ display: 'flex',alignItems: 'center', pl: 1, pb: 1 }}>
+            <Box sx={{ display: 'flex',alignItems: 'center', pl: isMobile?8:1, pb: 1 }}>
                 <ButtonGroup orientation='vertical'>
                     <ButtonGroup sx={{alignItems:'center', pl: 3 }}>
                         <IconButton aria-label="set playback to 1x" onClick={()=>normal()}>
@@ -130,6 +149,9 @@ export default function Player() {
                         </IconButton>
                         <IconButton aria-label="set playback to 2x" onClick={()=>fastForward()}>
                             <FastForwardIcon sx={{ height: 30, width: 30 }}/>
+                        </IconButton>
+                        <IconButton>
+                            <ChangeSpeed setSpeed={setSpeed}/>
                         </IconButton>
                     </ButtonGroup>
                     <ButtonGroup>
@@ -149,11 +171,11 @@ export default function Player() {
             
         <CardMedia
             component="img"
-            sx={{ width: 151 }}
+            sx={{ width: isMobile?280:151}}
             image={tracks[trackId].img}
         />
         
         </Card>     
-        </>
+        </Box>
     )
 }
